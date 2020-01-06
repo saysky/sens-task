@@ -37,7 +37,7 @@ public class AdminController extends BaseController {
      */
     @GetMapping
     public String index(Model model) {
-        return "forward:/admin/user";
+        return "forward:/admin/task";
     }
 
 

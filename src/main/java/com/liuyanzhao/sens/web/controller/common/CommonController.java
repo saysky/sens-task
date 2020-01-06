@@ -23,6 +23,16 @@ public class CommonController implements ErrorController {
     private static final String ERROR_PATH = "/error";
 
     /**
+     * 渲染403页面
+     *
+     * @return String
+     */
+    @GetMapping(value = "/")
+    public String index() {
+        return "forward:/admin";
+    }
+
+    /**
      * 渲染404，500
      *
      * @param request request
