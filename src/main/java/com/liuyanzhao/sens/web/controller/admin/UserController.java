@@ -117,7 +117,7 @@ public class UserController extends BaseController {
     @ResponseBody
     public JsonResult removeUser(@RequestParam("id") Long userId) {
         userService.delete(userId);
-        return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), localeMessageUtil.getMessage("code.admin.common.delete-success"));
+        return JsonResult.success(localeMessageUtil.getMessage("code.admin.common.delete-success"));
     }
 
     /**
@@ -165,13 +165,13 @@ public class UserController extends BaseController {
     public JsonResult batchDelete(@RequestParam("ids") List<Long> ids) {
         //批量操作
         if (ids == null || ids.size() == 0 || ids.size() >= 100) {
-            return new JsonResult(ResultCodeEnum.FAIL.getCode(), "参数不合法!");
+            return JsonResult.error("参数不合法!");
         }
         List<User> userList = userService.findByBatchIds(ids);
         for (User user : userList) {
             userService.delete(user.getId());
         }
-        return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), localeMessageUtil.getMessage("code.admin.common.delete-success"));
+        return JsonResult.success(localeMessageUtil.getMessage("code.admin.common.delete-success"));
     }
 
     /**
@@ -186,7 +186,7 @@ public class UserController extends BaseController {
     public JsonResult saveUser(@ModelAttribute User user,
                                @RequestParam("roleList") List<Long> roleList) {
         if (roleList == null || roleList.size() == 0) {
-            return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.user.need-choose-role"));
+            return JsonResult.error(localeMessageUtil.getMessage("code.admin.user.need-choose-role"));
         }
 
         //1.添加用户
@@ -198,7 +198,7 @@ public class UserController extends BaseController {
         for (Long roleId : roleList) {
             userRoleRefService.insert(new UserRoleRef(userId, roleId));
         }
-        return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), localeMessageUtil.getMessage("code.admin.common.save-success"));
+        return JsonResult.success(localeMessageUtil.getMessage("code.admin.common.save-success"));
     }
 
     /**
@@ -232,7 +232,7 @@ public class UserController extends BaseController {
     @SystemLog(description = "管理员修改其他用户信息", type = LogTypeEnum.OPERATION)
     public JsonResult adminSaveProfile(@ModelAttribute User user) {
         userService.insertOrUpdate(user);
-        return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), localeMessageUtil.getMessage("code.admin.common.edit-success"));
+        return JsonResult.success(localeMessageUtil.getMessage("code.admin.common.edit-success"));
     }
 
     /**
@@ -250,6 +250,6 @@ public class UserController extends BaseController {
         if (null != user) {
             userService.updatePassword(user.getId(), newPass);
         }
-        return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), localeMessageUtil.getMessage("code.admin.user.update-password-success"));
+        return JsonResult.success(localeMessageUtil.getMessage("code.admin.user.update-password-success"));
     }
 }

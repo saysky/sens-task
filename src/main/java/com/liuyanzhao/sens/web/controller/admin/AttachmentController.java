@@ -199,7 +199,7 @@ public class AttachmentController extends BaseController {
         Long userId = getLoginUserId();
         Attachment attachment = attachmentService.get(attachId);
         if (!Objects.equals(attachment.getUserId(), userId)) {
-            return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.common.permission-denied"));
+            return JsonResult.error(localeMessageUtil.getMessage("code.admin.common.permission-denied"));
         }
         String attachLocation = attachment.getAttachLocation();
         String delFileName = attachment.getAttachName();
@@ -239,14 +239,14 @@ public class AttachmentController extends BaseController {
                 log.info("Delete file {} successfully!", delFileName);
             } else {
                 log.error("Deleting attachment {} failed!", delFileName);
-                return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.common.delete-failed"));
+                return JsonResult.error(localeMessageUtil.getMessage("code.admin.common.delete-failed"));
             }
         } catch (Exception e) {
             e.printStackTrace();
             log.error("Deleting attachment {} failed: {}", delFileName, e.getMessage());
-            return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.common.delete-failed"));
+            return JsonResult.error(localeMessageUtil.getMessage("code.admin.common.delete-failed"));
         }
-        return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), localeMessageUtil.getMessage("code.admin.common.delete-success"));
+        return JsonResult.success(localeMessageUtil.getMessage("code.admin.common.delete-success"));
     }
 
     /**

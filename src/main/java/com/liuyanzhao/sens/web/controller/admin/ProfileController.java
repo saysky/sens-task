@@ -83,7 +83,7 @@ public class ProfileController extends BaseController {
         saveUser.setUserDesc(user.getUserDesc());
         saveUser.setUserEmail(user.getUserEmail());
         userService.insertOrUpdate(saveUser);
-        return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), localeMessageUtil.getMessage("code.admin.common.edit-success-login-again"));
+        return JsonResult.success(localeMessageUtil.getMessage("code.admin.common.edit-success-login-again"));
     }
 
 
@@ -104,9 +104,9 @@ public class ProfileController extends BaseController {
         if (user != null && Objects.equals(user.getUserPass(), Md5Util.toMd5(beforePass, "sens", 10))) {
             userService.updatePassword(user.getId(), newPass);
         } else {
-            return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.user.old-password-error"));
+            return JsonResult.error(localeMessageUtil.getMessage("code.admin.user.old-password-error"));
         }
-        return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), localeMessageUtil.getMessage("code.admin.user.update-password-success"));
+        return JsonResult.success(localeMessageUtil.getMessage("code.admin.user.update-password-success"));
     }
 
 

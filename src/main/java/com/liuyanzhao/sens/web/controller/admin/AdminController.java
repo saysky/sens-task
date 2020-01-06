@@ -51,7 +51,7 @@ public class AdminController extends BaseController {
     public JsonResult getMenu() {
         Long userId = getLoginUserId();
         List<Permission> permissions = permissionService.findPermissionTreeByUserIdAndResourceType(userId, "menu");
-        return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), "", permissions);
+        return JsonResult.success("", permissions);
     }
 
 }

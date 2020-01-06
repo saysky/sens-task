@@ -105,11 +105,11 @@ public class LoginController extends BaseController {
                 redisUtil.del(RedisKeys.USER_PERMISSION_URLS + user.getId());
                 Set<String> permissionUrls = permissionService.findPermissionUrlsByUserId(user.getId());
                 subject.getSession().setAttribute("permissionUrls", permissionUrls);
-                return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), localeMessageUtil.getMessage("code.admin.login.success"));
+                return JsonResult.success(localeMessageUtil.getMessage("code.admin.login.success"));
             }
         } catch (UnknownAccountException e) {
             log.info("UnknownAccountException -- > 账号不存在：");
-            return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.login.user.not.found"));
+            return JsonResult.error(localeMessageUtil.getMessage("code.admin.login.user.not.found"));
         } catch (IncorrectCredentialsException e) {
             //更新失败次数
             User user;
@@ -125,15 +125,15 @@ public class LoginController extends BaseController {
                     userService.updateUserLoginEnable(user, TrueFalseEnum.FALSE.getValue());
                 }
                 Object[] args = {(5 - errorCount) > 0 ? (5 - errorCount) : 0};
-                return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.login.failed", args));
+                return JsonResult.error(localeMessageUtil.getMessage("code.admin.login.failed", args));
             }
         } catch (LockedAccountException e) {
             log.info("LockedAccountException -- > 账号被锁定");
-            return new JsonResult(ResultCodeEnum.FAIL.getCode(), e.getMessage());
+            return JsonResult.error(e.getMessage());
         } catch (Exception e) {
             log.info(e.getMessage());
         }
-        return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.common.query-failed"));
+        return JsonResult.error(localeMessageUtil.getMessage("code.admin.common.query-failed"));
     }
 
     /**
@@ -166,17 +166,17 @@ public class LoginController extends BaseController {
                                   @ModelAttribute("userPass") String userPass,
                                   @ModelAttribute("userEmail") String userEmail) {
         if (StringUtils.equals(SensConst.OPTIONS.get(BlogPropertiesEnum.OPEN_REGISTER.getProp()), TrueFalseEnum.FALSE.getValue())) {
-            return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.register.close"));
+            return JsonResult.error(localeMessageUtil.getMessage("code.admin.register.close"));
         }
         //1.检查用户名
         User checkUser = userService.findByUserName(userName);
         if (checkUser != null) {
-            return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.user.user-name-exist"));
+            return JsonResult.error(localeMessageUtil.getMessage("code.admin.user.user-name-exist"));
         }
         //2.检查用户名
         User checkEmail = userService.findByEmail(userEmail);
         if (checkEmail != null) {
-            return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.user.user-email-exist"));
+            return JsonResult.error(localeMessageUtil.getMessage("code.admin.user.user-email-exist"));
         }
         //3.创建用户
         User user = new User();
@@ -213,10 +213,10 @@ public class LoginController extends BaseController {
 //            mailService.sendTemplateMail(
 //                    userEmail,  SensConst.OPTIONS.get(BlogPropertiesEnum.BLOG_TITLE.getProp()) + "账户 - 电子邮箱激活", map, "common/mail_template/mail_active_email.ftl");
 //        } else {
-//            return new JsonResult(ResultCodeEnum.FAIL.getCode(), "本站没有启动SMTP，无法发送邮件！");
+//            return JsonResult.error("本站没有启动SMTP，无法发送邮件！");
 //        }
 
-        return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), localeMessageUtil.getMessage("code.admin.register.success"));
+        return JsonResult.success(localeMessageUtil.getMessage("code.admin.register.success"));
     }
 
     /**
@@ -262,12 +262,12 @@ public class LoginController extends BaseController {
                 mailService.sendTemplateMail(
                         userEmail, SensConst.OPTIONS.get(BlogPropertiesEnum.BLOG_TITLE.getProp()) + "账户 - 找回密码", map, "common/mail_template/mail_forget.ftl");
             } else {
-                return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.smtp-not-enable"));
+                return JsonResult.error(localeMessageUtil.getMessage("code.admin.smtp-not-enable"));
             }
         } else {
-            return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.forget.username-email-invalid"));
+            return JsonResult.error(localeMessageUtil.getMessage("code.admin.forget.username-email-invalid"));
         }
-        return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), localeMessageUtil.getMessage("code.admin.forget.password-send-mailbox"));
+        return JsonResult.success(localeMessageUtil.getMessage("code.admin.forget.password-send-mailbox"));
     }
 
     /**

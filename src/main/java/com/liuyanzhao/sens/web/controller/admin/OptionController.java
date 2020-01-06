@@ -70,6 +70,6 @@ public class OptionController {
         SensConst.OPTIONS.clear();
         SensConst.OPTIONS = optionsService.findAllOptions();
         log.info("所保存的设置选项列表：" + options);
-        return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), localeMessageUtil.getMessage("code.admin.common.save-success"));
+        return JsonResult.success(localeMessageUtil.getMessage("code.admin.common.save-success"));
     }
 }

@@ -62,4 +62,20 @@ public class JsonResult {
         this.code = code;
         this.result = result;
     }
+
+    public static JsonResult error(String msg) {
+        return new JsonResult(0, msg);
+    }
+
+    public static JsonResult success() {
+        return new JsonResult(1, "操作成功");
+    }
+
+    public static JsonResult success(String msg) {
+        return new JsonResult(1, msg);
+    }
+
+    public static JsonResult success(String msg, Object result) {
+        return new JsonResult(1, msg, result);
+    }
 }

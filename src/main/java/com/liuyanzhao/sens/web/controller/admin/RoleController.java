@@ -91,10 +91,10 @@ public class RoleController {
         //判断这个角色有没有用户
         Integer userCount = roleService.countUserByRoleId(roleId);
         if (userCount != 0) {
-            return new JsonResult(ResultCodeEnum.FAIL.getCode(), localeMessageUtil.getMessage("code.admin.role.delete-failed"));
+            return JsonResult.error(localeMessageUtil.getMessage("code.admin.role.delete-failed"));
         }
         roleService.delete(roleId);
-        return new JsonResult(ResultCodeEnum.SUCCESS.getCode(), "");
+        return JsonResult.success("");
     }
 
 
